@@ -35,6 +35,12 @@ The application expects a CSV file (`congestiondata.csv`) with the following col
 - CRZ Entries
 - Excluded Roadway Entries
 
+## XG Boost
+- Select features to include in a boosted decision tree
+- Understand the importance of each feature in predicting CRZ_entries
+- Find features that more useful in understanding the dataset
+
+
 ## Dependencies
 
 - streamlit>=1.28.0
