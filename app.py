@@ -14,7 +14,7 @@ if 'saved_stats' not in st.session_state:
     st.session_state.saved_stats = []
 
 # Title and description
-st.title("🚗 CRZ Entries Analysis Dashboard")
+st.title("MTA Congestion Dashboard")
 st.markdown("""
 This dashboard visualizes the number of Congestion Reduction Zone (CRZ) entries and Excluded Roadway Entries (ERE) over time.
 Use the sidebar to filter and analyze the data.
@@ -208,8 +208,8 @@ with col1:
 with col2:
     st.subheader("Statistics")
     
-    # Calculate overall statistics for saving
-    overall_stats = {}
+    # Calculate statistics for saving
+    stats_to_save = {}
     
     if not show_by_group and not show_by_vehicle:
         # Calculate overall statistics
@@ -221,7 +221,7 @@ with col2:
             crz_std = time_series['CRZ Entries'].std()
             crz_median = time_series['CRZ Entries'].median()
             
-            overall_stats['CRZ'] = {
+            stats_to_save['CRZ'] = {
                 'Total': crz_total,
                 'Average': crz_avg,
                 'Maximum': crz_max,
@@ -246,7 +246,7 @@ with col2:
             ere_std = time_series['Excluded Roadway Entries'].std()
             ere_median = time_series['Excluded Roadway Entries'].median()
             
-            overall_stats['ERE'] = {
+            stats_to_save['ERE'] = {
                 'Total': ere_total,
                 'Average': ere_avg,
                 'Maximum': ere_max,
@@ -263,7 +263,7 @@ with col2:
             st.metric("Standard Deviation", f"{ere_std:,.2f}")
             st.metric("Median", f"{ere_median:,.2f}")
     else:
-        # Display statistics for groups or vehicle classes
+        # Calculate statistics for groups or vehicle classes
         if show_by_group and selected_groups:
             if show_by_vehicle and selected_vehicles:
                 # Calculate statistics for each group and vehicle class combination
@@ -281,6 +281,16 @@ with col2:
                                 crz_max = group_data['CRZ Entries'].max()
                                 crz_min = group_data['CRZ Entries'].min()
                                 
+                                # Store in stats_to_save
+                                if 'CRZ' not in stats_to_save:
+                                    stats_to_save['CRZ'] = {}
+                                stats_to_save['CRZ'][f"{group} - {vehicle}"] = {
+                                    'Total': crz_total,
+                                    'Average': crz_avg,
+                                    'Maximum': crz_max,
+                                    'Minimum': crz_min
+                                }
+                                
                                 st.markdown("CRZ Entries:")
                                 st.metric("Total", f"{crz_total:,.0f}")
                                 st.metric("Average per Hour", f"{crz_avg:,.2f}")
@@ -292,6 +302,16 @@ with col2:
                                 ere_avg = group_data['Excluded Roadway Entries'].mean()
                                 ere_max = group_data['Excluded Roadway Entries'].max()
                                 ere_min = group_data['Excluded Roadway Entries'].min()
+                                
+                                # Store in stats_to_save
+                                if 'ERE' not in stats_to_save:
+                                    stats_to_save['ERE'] = {}
+                                stats_to_save['ERE'][f"{group} - {vehicle}"] = {
+                                    'Total': ere_total,
+                                    'Average': ere_avg,
+                                    'Maximum': ere_max,
+                                    'Minimum': ere_min
+                                }
                                 
                                 st.markdown("Excluded Roadway Entries:")
                                 st.metric("Total", f"{ere_total:,.0f}")
@@ -313,6 +333,16 @@ with col2:
                         crz_max = group_data['CRZ Entries'].max()
                         crz_min = group_data['CRZ Entries'].min()
                         
+                        # Store in stats_to_save
+                        if 'CRZ' not in stats_to_save:
+                            stats_to_save['CRZ'] = {}
+                        stats_to_save['CRZ'][group] = {
+                            'Total': crz_total,
+                            'Average': crz_avg,
+                            'Maximum': crz_max,
+                            'Minimum': crz_min
+                        }
+                        
                         st.markdown("CRZ Entries:")
                         st.metric("Total", f"{crz_total:,.0f}")
                         st.metric("Average per Hour", f"{crz_avg:,.2f}")
@@ -324,6 +354,16 @@ with col2:
                         ere_avg = group_data['Excluded Roadway Entries'].mean()
                         ere_max = group_data['Excluded Roadway Entries'].max()
                         ere_min = group_data['Excluded Roadway Entries'].min()
+                        
+                        # Store in stats_to_save
+                        if 'ERE' not in stats_to_save:
+                            stats_to_save['ERE'] = {}
+                        stats_to_save['ERE'][group] = {
+                            'Total': ere_total,
+                            'Average': ere_avg,
+                            'Maximum': ere_max,
+                            'Minimum': ere_min
+                        }
                         
                         st.markdown("Excluded Roadway Entries:")
                         st.metric("Total", f"{ere_total:,.0f}")
@@ -345,6 +385,16 @@ with col2:
                     crz_max = vehicle_data['CRZ Entries'].max()
                     crz_min = vehicle_data['CRZ Entries'].min()
                     
+                    # Store in stats_to_save
+                    if 'CRZ' not in stats_to_save:
+                        stats_to_save['CRZ'] = {}
+                    stats_to_save['CRZ'][vehicle] = {
+                        'Total': crz_total,
+                        'Average': crz_avg,
+                        'Maximum': crz_max,
+                        'Minimum': crz_min
+                    }
+                    
                     st.markdown("CRZ Entries:")
                     st.metric("Total", f"{crz_total:,.0f}")
                     st.metric("Average per Hour", f"{crz_avg:,.2f}")
@@ -356,6 +406,16 @@ with col2:
                     ere_avg = vehicle_data['Excluded Roadway Entries'].mean()
                     ere_max = vehicle_data['Excluded Roadway Entries'].max()
                     ere_min = vehicle_data['Excluded Roadway Entries'].min()
+                    
+                    # Store in stats_to_save
+                    if 'ERE' not in stats_to_save:
+                        stats_to_save['ERE'] = {}
+                    stats_to_save['ERE'][vehicle] = {
+                        'Total': ere_total,
+                        'Average': ere_avg,
+                        'Maximum': ere_max,
+                        'Minimum': ere_min
+                    }
                     
                     st.markdown("Excluded Roadway Entries:")
                     st.metric("Total", f"{ere_total:,.0f}")
@@ -369,41 +429,68 @@ with col2:
 st.markdown("---")
 st.subheader("Save Statistics")
 
-# Only show save options if we have overall statistics (not grouped)
-if overall_stats:
-    # Create a name for this timeframe
-    timeframe_name = st.text_input("Name this timeframe", value=f"{start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}")
+# Create a name for this timeframe
+timeframe_name = st.text_input("Name this timeframe", value=f"{start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}")
+
+# Add group/vehicle class info to the name if applicable
+if show_by_group and selected_groups:
+    if show_by_vehicle and selected_vehicles:
+        timeframe_name += f" - Groups: {', '.join(selected_groups)} - Vehicles: {', '.join(selected_vehicles)}"
+    else:
+        timeframe_name += f" - Groups: {', '.join(selected_groups)}"
+elif show_by_vehicle and selected_vehicles:
+    timeframe_name += f" - Vehicles: {', '.join(selected_vehicles)}"
+
+# Save button
+if st.button("Save Statistics"):
+    # Create a dictionary with the statistics
+    stats_to_save_dict = {
+        'name': timeframe_name,
+        'start_date': start_date,
+        'end_date': end_date,
+        'stats': stats_to_save,
+        'pivot_data': pivot_data.copy(),  # Save the pivot data for later use
+        'is_grouped': show_by_group or show_by_vehicle,
+        'groups': selected_groups if show_by_group else [],
+        'vehicles': selected_vehicles if show_by_vehicle else []
+    }
     
-    # Save button
-    if st.button("Save Statistics"):
-        # Create a dictionary with the statistics
-        stats_to_save = {
-            'name': timeframe_name,
-            'start_date': start_date,
-            'end_date': end_date,
-            'stats': overall_stats
+    # Add to session state
+    st.session_state.saved_stats.append(stats_to_save_dict)
+    st.success(f"Statistics for '{timeframe_name}' saved successfully!")
+
+# Display saved statistics
+if st.session_state.saved_stats:
+    st.subheader("Saved Statistics")
+    
+    # Create a dataframe for comparison
+    comparison_data = []
+    
+    for saved_stat in st.session_state.saved_stats:
+        row_data = {
+            'Timeframe': saved_stat['name'],
+            'Start Date': saved_stat['start_date'],
+            'End Date': saved_stat['end_date'],
+            'Grouped': 'Yes' if saved_stat['is_grouped'] else 'No'
         }
         
-        # Add to session state
-        st.session_state.saved_stats.append(stats_to_save)
-        st.success(f"Statistics for '{timeframe_name}' saved successfully!")
-    
-    # Display saved statistics
-    if st.session_state.saved_stats:
-        st.subheader("Saved Statistics")
-        
-        # Create a dataframe for comparison
-        comparison_data = []
-        
-        for saved_stat in st.session_state.saved_stats:
-            row_data = {
-                'Timeframe': saved_stat['name'],
-                'Start Date': saved_stat['start_date'],
-                'End Date': saved_stat['end_date']
-            }
-            
-            # Add CRZ stats if available
-            if 'CRZ' in saved_stat['stats']:
+        # Add CRZ stats if available
+        if 'CRZ' in saved_stat['stats']:
+            if saved_stat['is_grouped']:
+                # For grouped data, we need to handle differently
+                crz_stats = saved_stat['stats']['CRZ']
+                if isinstance(crz_stats, dict) and any(isinstance(v, dict) for v in crz_stats.values()):
+                    # This is nested grouped data
+                    for group, stats in crz_stats.items():
+                        row_data[f"CRZ {group} Total"] = stats['Total']
+                        row_data[f"CRZ {group} Average"] = stats['Average']
+                else:
+                    # This is regular grouped data
+                    for group, stats in crz_stats.items():
+                        row_data[f"CRZ {group} Total"] = stats['Total']
+                        row_data[f"CRZ {group} Average"] = stats['Average']
+            else:
+                # For non-grouped data
                 crz_stats = saved_stat['stats']['CRZ']
                 row_data.update({
                     'CRZ Total': crz_stats['Total'],
@@ -413,9 +500,24 @@ if overall_stats:
                     'CRZ Std Dev': crz_stats['Std Dev'],
                     'CRZ Median': crz_stats['Median']
                 })
-            
-            # Add ERE stats if available
-            if 'ERE' in saved_stat['stats']:
+        
+        # Add ERE stats if available
+        if 'ERE' in saved_stat['stats']:
+            if saved_stat['is_grouped']:
+                # For grouped data, we need to handle differently
+                ere_stats = saved_stat['stats']['ERE']
+                if isinstance(ere_stats, dict) and any(isinstance(v, dict) for v in ere_stats.values()):
+                    # This is nested grouped data
+                    for group, stats in ere_stats.items():
+                        row_data[f"ERE {group} Total"] = stats['Total']
+                        row_data[f"ERE {group} Average"] = stats['Average']
+                else:
+                    # This is regular grouped data
+                    for group, stats in ere_stats.items():
+                        row_data[f"ERE {group} Total"] = stats['Total']
+                        row_data[f"ERE {group} Average"] = stats['Average']
+            else:
+                # For non-grouped data
                 ere_stats = saved_stat['stats']['ERE']
                 row_data.update({
                     'ERE Total': ere_stats['Total'],
@@ -425,21 +527,65 @@ if overall_stats:
                     'ERE Std Dev': ere_stats['Std Dev'],
                     'ERE Median': ere_stats['Median']
                 })
+        
+        comparison_data.append(row_data)
+    
+    # Create dataframe
+    comparison_df = pd.DataFrame(comparison_data)
+    
+    # Display the dataframe
+    st.dataframe(comparison_df)
+    
+    # Option to clear saved statistics
+    if st.button("Clear All Saved Statistics"):
+        st.session_state.saved_stats = []
+        st.experimental_rerun()
+    
+    # Compare saved timeframes
+    st.subheader("Compare Saved Timeframes")
+    
+    # Create a multiselect for selecting timeframes to compare
+    timeframe_options = [f"{stat['name']} ({stat['start_date'].strftime('%Y-%m-%d')} to {stat['end_date'].strftime('%Y-%m-%d')})" 
+                        for stat in st.session_state.saved_stats]
+    
+    selected_timeframes = st.multiselect(
+        "Select timeframes to compare",
+        options=timeframe_options,
+        default=timeframe_options[:min(2, len(timeframe_options))] if timeframe_options else []
+    )
+    
+    # Display overlaid graphs for selected timeframes
+    if selected_timeframes:
+        st.subheader("Comparison Graph")
+        
+        # Create a combined dataframe for all selected timeframes
+        combined_data = pd.DataFrame()
+        
+        # Add each selected timeframe's data to the combined dataframe
+        for timeframe in selected_timeframes:
+            # Find the index of the selected timeframe
+            idx = timeframe_options.index(timeframe)
+            saved_stat = st.session_state.saved_stats[idx]
             
-            comparison_data.append(row_data)
+            # Get the pivot data for this timeframe
+            timeframe_data = saved_stat['pivot_data']
+            
+            # Rename columns to include the timeframe name
+            renamed_cols = {}
+            for col in timeframe_data.columns:
+                renamed_cols[col] = f"{col} ({saved_stat['name']})"
+            
+            # Add the renamed data to the combined dataframe
+            combined_data = pd.concat([combined_data, timeframe_data.rename(columns=renamed_cols)], axis=1)
         
-        # Create dataframe
-        comparison_df = pd.DataFrame(comparison_data)
+        # Display the combined graph
+        st.line_chart(
+            combined_data,
+            use_container_width=True
+        )
         
-        # Display the dataframe
-        st.dataframe(comparison_df)
-        
-        # Option to clear saved statistics
-        if st.button("Clear All Saved Statistics"):
-            st.session_state.saved_stats = []
-            st.experimental_rerun()
-else:
-    st.info("Statistics can only be saved when viewing overall data (not grouped by detection group or vehicle class).")
+        # Add a legend explanation
+        st.markdown("**Legend:** Each line represents a different timeframe. The timeframe name is included in the legend.")
 
 # Additional analysis section
 st.markdown("---")
@@ -455,4 +601,4 @@ if st.checkbox("Show Time Series Data"):
 
 # Footer
 st.markdown("---")
-st.markdown("Data source: NYC Congestion Reduction Zone Data") 
+st.markdown("Data source: NYC Congestion Reduction Zone Data")
