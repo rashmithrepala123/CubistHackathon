@@ -11,6 +11,11 @@ streamlit run app.py
 3. Top-right corner has a dashboard link
    - **Data Dashboard**: View comprehensive entry analysis
    - **Spider Chart Analysis**: Compare entry points using radar visualization
+  
+### Visualization of CRZ 
+- Displays the congestion levels of various entry points using a heatmap
+- Actively see the total CRZ entries at any point and at any of the 12 entry points
+- 
 
 ### Data Dashboard Features
 - Time-based filtering
