@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from spider_chart import show_spider_analysis  # Import the spider chart
 
-# Set page config
+# Set page config with light theme
 st.set_page_config(
     page_title="CRZ Entries Analysis",
     page_icon="🚗",

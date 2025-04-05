@@ -27,16 +27,16 @@ if 'saved_charts' not in st.session_state:
 
 # Define a color palette for saved charts
 COLORS = [
-    ('rgba(255, 99, 71, 0.3)', 'rgba(255, 99, 71, 0.8)'),    # Tomato
-    ('rgba(65, 105, 225, 0.3)', 'rgba(65, 105, 225, 0.8)'),  # Royal Blue
-    ('rgba(50, 205, 50, 0.3)', 'rgba(50, 205, 50, 0.8)'),    # Lime Green
-    ('rgba(255, 165, 0, 0.3)', 'rgba(255, 165, 0, 0.8)'),    # Orange
-    ('rgba(186, 85, 211, 0.3)', 'rgba(186, 85, 211, 0.8)'),  # Medium Orchid
-    ('rgba(30, 144, 255, 0.3)', 'rgba(30, 144, 255, 0.8)'),  # Dodger Blue
-    ('rgba(255, 215, 0, 0.3)', 'rgba(255, 215, 0, 0.8)'),    # Gold
-    ('rgba(220, 20, 60, 0.3)', 'rgba(220, 20, 60, 0.8)'),    # Crimson
-    ('rgba(0, 255, 127, 0.3)', 'rgba(0, 255, 127, 0.8)'),    # Spring Green
-    ('rgba(148, 0, 211, 0.3)', 'rgba(148, 0, 211, 0.8)')     # Dark Violet
+    ('rgba(255, 99, 71, 0.3)', 'rgb(255, 99, 71)'),      # Tomato
+    ('rgba(100, 149, 237, 0.3)', 'rgb(100, 149, 237)'),  # Cornflower Blue
+    ('rgba(50, 205, 50, 0.3)', 'rgb(50, 205, 50)'),      # Lime Green
+    ('rgba(255, 165, 0, 0.3)', 'rgb(255, 165, 0)'),      # Orange
+    ('rgba(186, 85, 211, 0.3)', 'rgb(186, 85, 211)'),    # Medium Orchid
+    ('rgba(30, 144, 255, 0.3)', 'rgb(30, 144, 255)'),    # Dodger Blue
+    ('rgba(255, 215, 0, 0.3)', 'rgb(255, 215, 0)'),      # Gold
+    ('rgba(255, 105, 180, 0.3)', 'rgb(255, 105, 180)'),  # Hot Pink
+    ('rgba(0, 255, 127, 0.3)', 'rgb(0, 255, 127)'),      # Spring Green
+    ('rgba(218, 112, 214, 0.3)', 'rgb(218, 112, 214)')   # Orchid
 ]
 
 @st.cache_data
@@ -52,7 +52,6 @@ def create_spider_chart(categories, values, title, show_saved=False, color='whit
     # Add saved charts if showing overlay
     if show_saved and st.session_state.saved_charts:
         for idx, saved_chart in enumerate(st.session_state.saved_charts):
-            # Get color from palette (cycling if more saved charts than colors)
             fill_color, line_color = COLORS[idx % len(COLORS)]
             
             fig.add_trace(go.Scatterpolar(
@@ -69,14 +68,14 @@ def create_spider_chart(categories, values, title, show_saved=False, color='whit
                             "<extra></extra>"
             ))
     
-    # Add current chart (always in purple)
+    # Add current chart
     fig.add_trace(go.Scatterpolar(
         r=np.concatenate((values, [values[0]])),
         theta=categories + [categories[0]],
         mode='lines+markers',
         name='Current',
         fill='toself',
-        fillcolor='rgba(147, 112, 219, 0.3)',  # Purple
+        fillcolor='rgba(147, 112, 219, 0.3)',  # Purple with transparency
         line=dict(color='white', width=2),
         marker=dict(color='white', size=8),
         hovertemplate="<b>%{theta}</b><br>" +
@@ -91,31 +90,36 @@ def create_spider_chart(categories, values, title, show_saved=False, color='whit
             y=0.95,
             font=dict(color='white', size=16)
         ),
-        paper_bgcolor='black',
-        plot_bgcolor='black',
+        paper_bgcolor='rgb(14, 17, 23)',  # Streamlit's default dark background
+        plot_bgcolor='rgb(14, 17, 23)',   # Matching background
         polar=dict(
-            bgcolor='black',
+            bgcolor='rgb(14, 17, 23)',    # Matching background
             radialaxis=dict(
                 visible=True,
                 showticklabels=True,
                 tickformat=",d",
                 color='white',
-                tickfont=dict(color='white'),
-                gridcolor='rgba(255, 255, 255, 0.2)'
+                tickfont=dict(color='white', size=10),
+                gridcolor='rgba(255, 255, 255, 0.2)',  # Light white grid
+                linecolor='white'  # White axis line
             ),
             angularaxis=dict(
                 direction="clockwise",
                 period=len(categories),
                 color='white',
-                tickfont=dict(color='white'),
-                gridcolor='rgba(255, 255, 255, 0.2)'
+                tickfont=dict(color='white', size=10),
+                gridcolor='rgba(255, 255, 255, 0.2)',  # Light white grid
+                linecolor='white'  # White axis line
             )
         ),
         showlegend=True,
         legend=dict(
             font=dict(color='white'),
-            bgcolor='rgba(0,0,0,0.5)'
+            bgcolor='rgba(14, 17, 23, 0.5)',  # Semi-transparent matching background
+            bordercolor='white',
+            borderwidth=1
         ),
+        margin=dict(t=100, b=0, l=0, r=0),
         height=700,
         width=700
     )
