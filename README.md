@@ -7,7 +7,7 @@
 streamlit run app.py
 ```
 
-2. Navigate to a map of New York City showing a simulation of cars:
+2. Navigate to the map of New York City showing a simulation of cars:
 3. Top-right corner has a dashboard link
    - **Data Dashboard**: View comprehensive entry analysis
    - **Spider Chart Analysis**: Compare entry points using radar visualization
