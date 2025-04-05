@@ -636,6 +636,7 @@ with tab2:
         # Create a Matplotlib radar chart
         fig, ax = plt.subplots(figsize=(8, 6), subplot_kw=dict(projection='polar'))
         
+        # changed 
         # Set dark theme
         fig.patch.set_facecolor('black')
         ax.set_facecolor('black')
