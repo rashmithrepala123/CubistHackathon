@@ -90,9 +90,6 @@ The dashboard is optimized for:
 4. Push to the branch
 5. Create a Pull Request
 
-## License
-
-[Your License Here]
 
 ## Who Uses This
 
@@ -101,12 +98,8 @@ The dashboard is optimized for:
 - Transportation researchers
 - Urban development teams
 
-## Support
-
-For support, please [create an issue](your-issue-link) or contact [your-contact-info].
-
 ## Acknowledgments
 
 - Streamlit for the web framework
 - Plotly for interactive visualizations
-- The NYC Department of Transportation for inspiration
+- Dataset: https://data.ny.gov/Transportation/MTA-Congestion-Relief-Zone-Vehicle-Entries-Beginni/t6yz-b64h/about_data
